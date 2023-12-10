@@ -272,7 +272,7 @@ We generate ROC plot, for each sex.
 The distribution difference of variables retain in multivariates regression is shown with density plot.
 
 .. image:: ../../plot/density.png
-   :width: 600
+   :width: 900
    :align: center
 
 .. code-block:: python
