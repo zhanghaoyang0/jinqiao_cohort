@@ -2,9 +2,10 @@
 Overview
 =============================================
 
-In 2022, the Children's Hospital from Jiangnan University estabilished a children cohort in China, Wuxi, namely Jinqiao cohort. The primary aim of the cohort is to follow-up the characteristics and risk factor of metabolic diseases (mainly MAFLD).  
+In 2022, the Children's Hospital from Jiangnan University estabilished a children cohort in China, Wuxi, namely Jinqiao cohort. 
+The primary aim of the cohort is to follow-up the characteristics and risk factors fpr metabolic diseases (mainly MAFLD).  
 
-We collected a wide range of biomakers, including some are less-explored previously. We performed a association study and made our R code available, for peer review.  
+A wide range of biomakers, including some are less-explored previously. A association study was performed. We made our R code available, for peer review.  
 
 Data access
 =======================
