@@ -151,8 +151,8 @@ Analysis: correlation within biomarkers
 Here we use a correlation matrix to measure the corrlation within biomakrers.  
 
 
-.. image:: ../../plot/cor.fig
-   :width: 600
+.. image:: ../../plot/cor.png
+   :width: 1000
    :align: center
 
 .. code-block:: python
@@ -272,7 +272,7 @@ We generate ROC plot, for each sex.
 The distribution difference of variables retain in multivariates regression is shown with density plot.
 
 .. image:: ../../plot/density.png
-   :width: 900
+   :width: 1000
    :align: center
 
 .. code-block:: python
