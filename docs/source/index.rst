@@ -229,8 +229,38 @@ Then, for those with significant p-value in univariate analysis (also with age a
    names(coef1) <- c("biomarker", "beta", "se", "p")
    row.names(coef1) <- NULL
 
+The distribution difference of variables retain in multivariates regression is shown with density plot.
 
-We generate ROC plot, for each sex.
+.. image:: ../../plot/density.png
+   :width: 1000
+   :align: center
+
+.. code-block:: python
+
+   vars <- names(reg1$coefficients)[-1]
+   vars <- gsub("`", "", vars)
+   df_p <- df[, c(vars, "MAFLD")]
+   df_p <- df_p %>%
+   gather(variable, value, -MAFLD) %>%
+   mutate(MAFLD = as.character(MAFLD))
+
+   p <- ggplot(df_p, aes(x = value, group = MAFLD, fill = MAFLD)) +
+   geom_density(alpha = 0.5, , adjust = 0.3) +
+   facet_wrap(~variable, scales = "free") +
+   scale_y_continuous(labels = function(x) sprintf("%.1f", x)) +
+   xlab("") +
+   ylab("") +
+   theme(
+      legend.position = c(0.9, 0.1),
+      legend.box = "inside"
+   )
+
+   png("plot/density.png", height = 1000, width = 2000, res = 160)
+   print(p)
+   dev.off()
+
+
+To evaluate the performance of the multivariates model, We calcuate AUC values and generate a ROC plot.
 
 .. image:: ../../plot/roc.png
    :width: 600
@@ -263,35 +293,6 @@ We generate ROC plot, for each sex.
    p
    dev.off()
 
-The distribution difference of variables retain in multivariates regression is shown with density plot.
-
-.. image:: ../../plot/density.png
-   :width: 1000
-   :align: center
-
-.. code-block:: python
-
-   vars <- names(reg1$coefficients)[-1]
-   vars <- gsub("`", "", vars)
-   df_p <- df[, c(vars, "MAFLD")]
-   df_p <- df_p %>%
-   gather(variable, value, -MAFLD) %>%
-   mutate(MAFLD = as.character(MAFLD))
-
-   p <- ggplot(df_p, aes(x = value, group = MAFLD, fill = MAFLD)) +
-   geom_density(alpha = 0.5, , adjust = 0.3) +
-   facet_wrap(~variable, scales = "free") +
-   scale_y_continuous(labels = function(x) sprintf("%.1f", x)) +
-   xlab("") +
-   ylab("") +
-   theme(
-      legend.position = c(0.9, 0.1),
-      legend.box = "inside"
-   )
-
-   png("plot/density.png", height = 1000, width = 2000, res = 160)
-   print(p)
-   dev.off()
 
 
 Comments and feedbacks
