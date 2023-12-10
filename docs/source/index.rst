@@ -2,7 +2,7 @@
 Overview
 =============================================
 
-In 2022, we estabilish a children cohort in China, Wuxi, namely Jinqiao cohort.  
+In 2022, the Children's Hospital from Jiangnan University estabilish a children cohort in China, Wuxi, namely Jinqiao cohort.  
 
 The primary aim of the cohort is to follow-up the characteristics and risk factor of metabolic diseases (mainly MAFLD).  
 
@@ -15,7 +15,7 @@ We made our R code available, for peer review.
 
 Data
 =======================
-To access the data, please contact Le Zhang via zhangle@jiangnan.edu.cn, or Haoyang Zhang via zhanghaoyang0@hotmail.com   
+To access the data, please contact Le Zhang via zhangle@jiangnan.edu.cn.   
 
 
 Analysis: preparation
@@ -88,24 +88,24 @@ Here we clean the raw dataset (remove redundancy variables, and recodes the vari
    ## recode
    # bmi, orinal values according to who criteria
    df <- df %>%
-   mutate(bmi = ifelse(BMI > SD1 & BMI < SD2, 1, ifelse(BMI > SD2, 2, 0)))
+      mutate(bmi = ifelse(BMI > SD1 & BMI < SD2, 1, ifelse(BMI > SD2, 2, 0)))
    # cat_biomarkers, convert to orinal values
    for (col in cat_biomarkers) {
-   print(col)
-   cat("before recode:\n")
-   print(table(df[, col]))
-   var = df[, col]
-   if (col == "UCA") {
-      var1 = case_when(var == "<1.00" ~ 0, var == "2.5" ~ 1, var == "5" ~ 2)
-   } else if (col == "URO") {
-      var1 = case_when(var == "阴性" ~ 0, var == "阳性+" ~ 1, var == "阳性++" ~ 2)
-   } else {
-      var1 = case_when(var == "阴性" ~ 0, var == "弱阳性" ~ 1, var == "阳性+" ~ 2, var == "阳性++" ~ 3, var == "阳性+++" ~ 4)
+      print(col)
+      cat("before recode:\n")
+      print(table(df[, col]))
+      var = df[, col]
+      if (col == "UCA") {
+         var1 = case_when(var == "<1.00" ~ 0, var == "2.5" ~ 1, var == "5" ~ 2)
+      } else if (col == "URO") {
+         var1 = case_when(var == "阴性" ~ 0, var == "阳性+" ~ 1, var == "阳性++" ~ 2)
+      } else {
+         var1 = case_when(var == "阴性" ~ 0, var == "弱阳性" ~ 1, var == "阳性+" ~ 2, var == "阳性++" ~ 3, var == "阳性+++" ~ 4)
+      }
+      df[, col] = var1
+      cat("after recode:\n")
+      print(table(df[, col]))
    }
-   df[, col] = var1
-   cat("after recode:\n")
-   print(table(df[, col]))
-}
    
 
 Analysis: description of population characteristics  
@@ -142,7 +142,7 @@ Distribution comparison was conducted according to data type.
    } else {
       test = t.test(df[, var] ~ df$MAFLD)
    }
-   print(test)
+      print(test)
    }
 
 
@@ -151,7 +151,7 @@ Analysis: correlation within biomarkers
 Here we use a correlation matrix to measure the corrlation within biomakrers.  
 
 
-.. image:: ../../plot/cor.png
+.. image:: ../../plot/cor.fig
    :width: 600
    :align: center
 
@@ -168,12 +168,10 @@ Here we use a correlation matrix to measure the corrlation within biomakrers.
    sub <- df[, keep_col]
    mat_cor <- cor(sub)
    mat_p <- corr.test(sub, adjust = "none")[["p"]]
-   p <- ggcorrplot(mat_cor,
-      p.mat = mat_p, type = "lower", hc.order = T, insig = "blank", outline.col = "white",
-      ggtheme = ggplot2::theme_gray
-   ) +
+   p <- ggcorrplot(mat_cor,p.mat = mat_p, type = "lower", hc.order = T, insig = "blank", outline.col = "white",
+      ggtheme = ggplot2::theme_gray) +
       theme(axis.text.x = element_text(angle = 90, hjust = 1))
-   plots[[i]] <- p
+      plots[[i]] <- p
    }
 
    png("plot/cor1.png", height = 800, width = 800, res = 80)
@@ -186,9 +184,8 @@ Here we use a correlation matrix to measure the corrlation within biomakrers.
 
    png("plot/cor3.png", height = 600, width = 1200, res = 100)
    ggarrange(plots[[3]], plots[[4]],
-   nrow = 1, ncol = 2, hjust = 0.1, vjust = 0.1,
-   common.legend = T, legend = "bottom"
-   )
+      nrow = 1, ncol = 2, hjust = 0.1, vjust = 0.1,
+      common.legend = T, legend = "bottom")
    dev.off()
 
 
@@ -198,20 +195,16 @@ Here we use regression to measure the association between biomarkers and MAFLD.
 
 First, for each biomarker, we measure its association with MAFLD, including age and sex as covariates.
 
-.. image:: fig2.png
-   :width: 600
-   :align: center
-
 .. code-block:: python
 
    res <- data.frame()
    for (biomaker in biomakers) {
-   reg <- glm(df$MAFLD ~ df[, biomaker] + df$Age + df$Sex, df, family = binomial()) # I add age and sex here.
-   coef <- data.frame(summary(reg)$coefficients)
-   coef <- coef[2, c(1, 2, 4)]
-   coef <- c(biomaker, coef)
-   names(coef) <- c("biomarker", "beta", "se", "p")
-   res <- rbind(res, coef)
+      reg <- glm(df$MAFLD ~ df[, biomaker] + df$Age + df$Sex, df, family = binomial()) # I add age and sex here.
+      coef <- data.frame(summary(reg)$coefficients)
+      coef <- coef[2, c(1, 2, 4)]
+      coef <- c(biomaker, coef)
+      names(coef) <- c("biomarker", "beta", "se", "p")
+      res <- rbind(res, coef)
    }
 
    vars <- unname(unlist(res %>% filter(p < 0.05) %>% select(biomarker)))
@@ -291,7 +284,6 @@ The distribution difference of variables retain in multivariates regression is s
    gather(variable, value, -MAFLD) %>%
    mutate(MAFLD = as.character(MAFLD))
 
-
    p <- ggplot(df_p, aes(x = value, group = MAFLD, fill = MAFLD)) +
    geom_density(alpha = 0.5, , adjust = 0.3) +
    facet_wrap(~variable, scales = "free") +
@@ -302,7 +294,6 @@ The distribution difference of variables retain in multivariates regression is s
       legend.position = c(0.9, 0.1),
       legend.box = "inside"
    )
-
 
    png("plot/density.png", height = 1000, width = 2000, res = 160)
    print(p)
