@@ -303,6 +303,4 @@ To evaluate the performance of the multivariates model, We calcuate AUC values a
 Comments and feedbacks
 =======================
 
-Feel free to contact me via zhanghaoyang0@hotmail.com.  
-
-You may star our project at `here <https://github.com/zhanghaoyang0/jinqiao_cohort>`_.  
+Find me via zhanghaoyang0@hotmail.com.  
