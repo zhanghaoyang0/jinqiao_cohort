@@ -7,6 +7,11 @@ The primary aim of the cohort is to follow-up the characteristics and risk facto
 
 A wide range of biomakers, including some are less-explored previously. A association study was performed. We made our R code available, for peer review.  
 
+.. image:: ../../plot/flow.png
+   :width: 800
+   :align: center
+
+
 Data access
 =======================
 To access the data, please contact Dr Le Zhang, via zhangle@jiangnan.edu.cn.   

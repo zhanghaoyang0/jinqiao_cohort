@@ -71,9 +71,9 @@ cat_biomarkers <- c("ERY", "URO", "PRO", "LEU", "VC", "UCA") # categorical bioma
 num_biomarkers <- biomakers[!biomakers %in% cat_biomarkers] # numeric biomarkers
 
 ## recode
-# bmi, orinal values according to who criteria
-df <- df %>%
-  mutate(bmi = ifelse(BMI > SD1 & BMI < SD2, 1, ifelse(BMI > SD2, 2, 0)))
+# # bmi, orinal values according to who criteria
+# df <- df %>%
+#   mutate(BMI = ifelse(BMI > SD1 & BMI < SD2, 1, ifelse(BMI > SD2, 2, 0)))
 # cat_biomarkers, convert to orinal values
 for (col in cat_biomarkers) {
   print(col)
@@ -126,10 +126,11 @@ for (var in c("Age", num_biomarkers)) {
 # ====================================================================
 # correlation
 # ====================================================================
-vars1 = c(names(df)[which(names(df) == "BFM"):which(names(df) == "FT_Thigh")])
-vars2 <- c(names(df)[which(names(df) == "INS"):which(names(df) == "UWBC")])
-vars3 <- c("Age", "BMI", "UPRO", "UPCR", "UCREA", "SG", "PH", "EC", "MUCS")
-vars4 <- c(names(df)[which(names(df) == "WBC"):which(names(df) == "PDW")])
+# 这里你把这四个给我。。。
+vars1 = c(names(df)[which(names(df) == "BFM"):which(names(df) == "FT_Thigh")]) # inbody
+vars2 <- c(names(df)[which(names(df) == "INS"):which(names(df) == "UREA/CREA")]) # urine
+vars3 <- c("Age", "BMI", "UPRO", "UPCR", "UCREA", "SG", "PH", "EC", "MUCS") # urine
+vars4 <- c(names(df)[which(names(df) == "WBC"):which(names(df) == "PDW")]) # blood
 
 plots <- list()
 for (i in 1:4) {
@@ -164,8 +165,9 @@ dev.off()
 # ====================================================================
 # regression
 # ====================================================================
+biomakers_keep = 'XXX' # 这里你把从相关性分析中选出来的告诉我
 res <- data.frame()
-for (biomaker in biomakers) {
+for (biomaker in biomakers_keep) {
   reg <- glm(df$MAFLD ~ df[, biomaker] + df$Age + df$Sex, df, family = binomial()) # I add age and sex here.
   coef <- data.frame(summary(reg)$coefficients)
   coef <- coef[2, c(1, 2, 4)]
