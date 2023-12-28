@@ -236,7 +236,8 @@ dev.off()
 # ====================================================================
 # regression
 # ====================================================================
-biomarkers = vars[!vars%in%vars]
+biomakers = unlist(vars)
+biomakers = biomakers[!biomakers%in%c(drop_vars, diagnosis_vars)]
 
 res <- data.frame()
 for (biomaker in biomakers) {
@@ -262,33 +263,33 @@ names(coef1) <- c("biomarker", "beta", "se", "p")
 row.names(coef1) <- NULL
 
 
-# ====================================================================
-# roc
-# ====================================================================
-df$pred <- predict(reg1, type = "response")
+# # ====================================================================
+# # roc
+# # ====================================================================
+# df$pred <- predict(reg1, type = "response")
 
-df1 <- df %>%
-  mutate(Sex = ifelse(Sex == "m", "Male", "Female")) %>%
-  select(Sex, pred, MAFLD)
-df2 <- df %>%
-  mutate(Sex = "Both") %>%
-  select(Sex, pred, MAFLD)
-df_p <- rbind(df1, df2) %>% mutate(Sex = factor(Sex, levels = c("Female", "Male", "Both")))
+# df1 <- df %>%
+#   mutate(Sex = ifelse(Sex == "m", "Male", "Female")) %>%
+#   select(Sex, pred, MAFLD)
+# df2 <- df %>%
+#   mutate(Sex = "Both") %>%
+#   select(Sex, pred, MAFLD)
+# df_p <- rbind(df1, df2) %>% mutate(Sex = factor(Sex, levels = c("Female", "Male", "Both")))
 
-p <- ggplot(df_p, aes(d = MAFLD, m = pred, color = Sex)) +
-  geom_roc(n.cuts = 0) +
-  style_roc() +
-  geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "gray") +
-  scale_x_continuous(breaks = c(0, 0.5, 1), labels = c(0, 0.5, 1)) +
-  scale_y_continuous(breaks = c(0, 0.5, 1), labels = c(0, 0.5, 1)) +
-  theme(legend.position = c(0.95, 0.05), legend.justification = c(1, 0), legend.title = element_text(size = 9)) +
-  labs(x = "1-Specificity", y = "Sensitivity")
+# p <- ggplot(df_p, aes(d = MAFLD, m = pred, color = Sex)) +
+#   geom_roc(n.cuts = 0) +
+#   style_roc() +
+#   geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "gray") +
+#   scale_x_continuous(breaks = c(0, 0.5, 1), labels = c(0, 0.5, 1)) +
+#   scale_y_continuous(breaks = c(0, 0.5, 1), labels = c(0, 0.5, 1)) +
+#   theme(legend.position = c(0.95, 0.05), legend.justification = c(1, 0), legend.title = element_text(size = 9)) +
+#   labs(x = "1-Specificity", y = "Sensitivity")
 
-calc_auc(p)[, 3:4]
+# calc_auc(p)[, 3:4]
 
-png("plot/roc.png", height = 600, width = 700, res = 120)
-p
-dev.off()
+# # png("plot/roc.png", height = 600, width = 700, res = 120)
+# # p
+# # dev.off()
 
 
 # ====================================================================

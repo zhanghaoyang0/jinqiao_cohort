@@ -50,15 +50,15 @@ Define functions:
    # temp = data.frame(sex=c('Male', 'Female'), MAFLD=c(1, 0))
    # get_prop(temp, 'sex', 'MAFLD')
    get_prop <- function(df, col, group_col) {
-   for (group in c("0|1", "1", "0")) {
-      sub <- df[grepl(group, df[, group_col]), ]
-      tab <- table(sub[, col])
-      frq <- data.frame(col = names(tab), n = as.numeric(tab))
-      frq <- frq %>% mutate(n = paste0(n, "(", sprintf("%.2f", n * 100 / sum(tab)), "%)"))
-      group1 <- case_when(group == "0|1" ~ "all", group == "1" ~ group_col, group == "0" ~ paste0("non-", group_col))
-      print(paste0("distribution of ", group1, " participants :"))
-      print(frq)
-   }
+      for (group in c("0|1", "1", "0")) {
+         sub <- df[grepl(group, df[, group_col]), ]
+         tab <- table(sub[, col])
+         frq <- data.frame(col = names(tab), n = as.numeric(tab))
+         frq <- frq %>% mutate(n = paste0(n, "(", sprintf("%.2f", n * 100 / sum(tab)), "%)"))
+         group1 <- case_when(group == "0|1" ~ "all", group == "1" ~ group_col, group == "0" ~ paste0("non-", group_col))
+         print(paste0("distribution of ", group1, " participants :"))
+         print(frq)
+      }
    }
 
 
@@ -216,18 +216,18 @@ After excluding the above biomarkers (associated with dianosis biomarker), we in
 
    plots <- list()
    for (i in names(vars)) {
-   keep_col <- vars[[i]]
-   keep_col = keep_col[!keep_col%in%drop_vars]
-   print(i)
-   print(keep_col)
-   sub <- df[, keep_col]
-   mat_cor <- cor(sub)
-   mat_p <- corr.test(sub, adjust = "none")[["p"]]
-   p <- ggcorrplot(mat_cor,
-      p.mat = mat_p, type = "lower", hc.order = T, insig = "blank", outline.col = "white",
-      ggtheme = ggplot2::theme_gray) +
-      theme(axis.text.x = element_text(angle = 90, hjust = 1), legend.position='none')
-   plots[[i]] <- p
+      keep_col <- vars[[i]]
+      keep_col = keep_col[!keep_col%in%drop_vars]
+      print(i)
+      print(keep_col)
+      sub <- df[, keep_col]
+      mat_cor <- cor(sub)
+      mat_p <- corr.test(sub, adjust = "none")[["p"]]
+      p <- ggcorrplot(mat_cor,
+         p.mat = mat_p, type = "lower", hc.order = T, insig = "blank", outline.col = "white",
+         ggtheme = ggplot2::theme_gray) +
+         theme(axis.text.x = element_text(angle = 90, hjust = 1), legend.position='none')
+      plots[[i]] <- p
    }
 
    png("plot/cor_inbody.png", height = 800, width = 1800, res = 100)
@@ -251,16 +251,16 @@ First, for each biomarker, we measure its association with MAFLD, including age 
 .. code-block:: python
 
    biomakers = unlist(vars)
-   biomakers = biomakers[!biomakers%in%drop_vars]
+   biomakers = biomakers[!biomakers%in%c(drop_vars, diagnosis_vars)]
 
    res <- data.frame()
    for (biomaker in biomakers) {
-   reg <- glm(df$MAFLD ~ df[, biomaker] + df$Age + df$Sex, df, family = binomial()) # I add age and sex here.
-   coef <- data.frame(summary(reg)$coefficients)
-   coef <- coef[2, c(1, 2, 4)]
-   coef <- c(biomaker, coef)
-   names(coef) <- c("biomarker", "beta", "se", "p")
-   res <- rbind(res, coef)
+      reg <- glm(df$MAFLD ~ df[, biomaker] + df$Age + df$Sex, df, family = binomial()) # I add age and sex here.
+      coef <- data.frame(summary(reg)$coefficients)
+      coef <- coef[2, c(1, 2, 4)]
+      coef <- c(biomaker, coef)
+      names(coef) <- c("biomarker", "beta", "se", "p")
+      res <- rbind(res, coef)
    }
 
    vars <- unname(unlist(res %>% filter(p < 0.05) %>% select(biomarker)))
@@ -277,38 +277,7 @@ First, for each biomarker, we measure its association with MAFLD, including age 
    row.names(coef1) <- NULL
 
 Then, for those with significant p-value in univariate analysis (also with age and sex as covariates), we perform multivariates analysis with a step-wise for variable selection. 
-AUC values were calcuate to measure the efficacy of these novel biomarkers.
 
-.. image:: ../../plot/roc.png
-   :width: 300
-   :align: center
-
-.. code-block:: python
-
-   df$pred <- predict(reg1, type = "response")
-
-   df1 <- df %>%
-   mutate(Sex = ifelse(Sex == "m", "Male", "Female")) %>%
-   select(Sex, pred, MAFLD)
-   df2 <- df %>%
-   mutate(Sex = "Both") %>%
-   select(Sex, pred, MAFLD)
-   df_p <- rbind(df1, df2) %>% mutate(Sex = factor(Sex, levels = c("Female", "Male", "Both")))
-
-   p <- ggplot(df_p, aes(d = MAFLD, m = pred, color = Sex)) +
-   geom_roc(n.cuts = 0) +
-   style_roc() +
-   geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "gray") +
-   scale_x_continuous(breaks = c(0, 0.5, 1), labels = c(0, 0.5, 1)) +
-   scale_y_continuous(breaks = c(0, 0.5, 1), labels = c(0, 0.5, 1)) +
-   theme(legend.position = c(0.95, 0.05), legend.justification = c(1, 0), legend.title = element_text(size = 9)) +
-   labs(x = "1-Specificity", y = "Sensitivity")
-
-   calc_auc(p)[, 3:4]
-
-   png("plot/roc.png", height = 600, width = 700, res = 120)
-   p
-   dev.off()
 
 The distribution difference of variables retain in multivariates regression is shown with density plot.
 
