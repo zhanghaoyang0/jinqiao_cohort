@@ -202,6 +202,10 @@ Here we identified which biomarker is related with the diagnosis biomarker, and 
 
 After excluding the above biomarkers (associated with dianosis biomarker), we investigate their pair-wise correlation.
 
+.. image:: ../../plot/cor2.png
+   :width: 1000
+   :align: center
+
 .. code-block:: python
 
    vars = list()
@@ -232,8 +236,8 @@ After excluding the above biomarkers (associated with dianosis biomarker), we in
 
    png("plot/cor2.png", height = 800, width = 1800, res = 100)
    ggarrange(plots[[2]], plots[[3]], plots[[4]],
-   nrow = 1, ncol = 3, hjust = 0.1, vjust = 0.1,
-   common.legend = T, legend = "bottom"
+      nrow = 1, ncol = 3, hjust = 0.1, vjust = 0.1,
+      common.legend = T, legend = "bottom"
    )
    dev.off()
 
@@ -274,6 +278,10 @@ First, for each biomarker, we measure its association with MAFLD, including age 
 
 Then, for those with significant p-value in univariate analysis (also with age and sex as covariates), we perform multivariates analysis with a step-wise for variable selection. 
 AUC values were calcuate to measure the efficacy of these novel biomarkers.
+
+.. image:: ../../plot/auc.png
+   :width: 1000
+   :align: center
 
 .. code-block:: python
 
