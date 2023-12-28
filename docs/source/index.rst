@@ -279,7 +279,7 @@ First, for each biomarker, we measure its association with MAFLD, including age 
 Then, for those with significant p-value in univariate analysis (also with age and sex as covariates), we perform multivariates analysis with a step-wise for variable selection. 
 AUC values were calcuate to measure the efficacy of these novel biomarkers.
 
-.. image:: ../../plot/auc.png
+.. image:: ../../plot/roc.png
    :width: 1000
    :align: center
 
