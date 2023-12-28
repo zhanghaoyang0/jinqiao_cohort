@@ -280,7 +280,7 @@ Then, for those with significant p-value in univariate analysis (also with age a
 AUC values were calcuate to measure the efficacy of these novel biomarkers.
 
 .. image:: ../../plot/roc.png
-   :width: 1000
+   :width: 300
    :align: center
 
 .. code-block:: python
