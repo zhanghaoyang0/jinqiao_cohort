@@ -256,40 +256,18 @@ reg <- glm(MAFLD ~ ., family = binomial(), data = sub)
 
 summary(reg)
 reg1 <- step(reg)
-coef1 <- data.frame(summary(reg1)$coefficients)
-coef1 <- coef1[2:nrow(coef1), c(1, 2, 4)]
-coef1 <- cbind(rownames(coef1), coef1)
-names(coef1) <- c("biomarker", "beta", "se", "p")
-row.names(coef1) <- NULL
+res1 <- data.frame(summary(reg1)$coefficients)
+res1 <- res1[2:nrow(res1), c(1, 2, 4)]
+res1 <- cbind(rownames(res1), res1)
+names(res1) <- c("biomarker", "beta", "se", "p")
+row.names(res1) <- NULL
+
+res%>%merge(res1, by='biomarker')
+# ====================================================================
+# check
+# ====================================================================
 
 
-# # ====================================================================
-# # roc
-# # ====================================================================
-# df$pred <- predict(reg1, type = "response")
-
-# df1 <- df %>%
-#   mutate(Sex = ifelse(Sex == "m", "Male", "Female")) %>%
-#   select(Sex, pred, MAFLD)
-# df2 <- df %>%
-#   mutate(Sex = "Both") %>%
-#   select(Sex, pred, MAFLD)
-# df_p <- rbind(df1, df2) %>% mutate(Sex = factor(Sex, levels = c("Female", "Male", "Both")))
-
-# p <- ggplot(df_p, aes(d = MAFLD, m = pred, color = Sex)) +
-#   geom_roc(n.cuts = 0) +
-#   style_roc() +
-#   geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "gray") +
-#   scale_x_continuous(breaks = c(0, 0.5, 1), labels = c(0, 0.5, 1)) +
-#   scale_y_continuous(breaks = c(0, 0.5, 1), labels = c(0, 0.5, 1)) +
-#   theme(legend.position = c(0.95, 0.05), legend.justification = c(1, 0), legend.title = element_text(size = 9)) +
-#   labs(x = "1-Specificity", y = "Sensitivity")
-
-# calc_auc(p)[, 3:4]
-
-# # png("plot/roc.png", height = 600, width = 700, res = 120)
-# # p
-# # dev.off()
 
 
 # ====================================================================
